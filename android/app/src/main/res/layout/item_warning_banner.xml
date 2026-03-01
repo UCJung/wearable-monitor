@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/card_padding"
+    android:layout_marginBottom="@dimen/card_grid_gap">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvWarningIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginEnd="8dp"
+            tools:text="⚠️" />
+
+        <TextView
+            android:id="@+id/tvWarningTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            tools:text="데이터 미수집 경고" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvWarningDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textSize="11.5sp"
+        android:textColor="@color/text_secondary"
+        tools:text="워치 연결을 확인해 주세요." />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnWarningAction"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/btn_height_small"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"
+        app:cornerRadius="@dimen/btn_corner_small"
+        android:visibility="gone"
+        tools:text="워치 연결 설정하기" />
+</LinearLayout>

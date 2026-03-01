@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>웨어러블 환자 모니터링 - 장치 할당 현황</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  :root {
+    --sidebar-bg:   #181d2e;
+    --sidebar-w:    210px;
+    --header-h:     48px;
+    --primary:      #6b5ce7;
+    --primary-dark: #5647cc;
+    --primary-bg:   #ede9ff;
+    --accent:       #f5a623;
+    --ok:           #27ae60;
+    --ok-bg:        #e8f8f0;
+    --warn:         #e67e22;
+    --warn-bg:      #fff3e0;
+    --danger:       #e74c3c;
+    --danger-bg:    #fdecea;
+    --gray:         #6c7a89;
+    --gray-light:   #f0f2f5;
+    --gray-border:  #e0e4ea;
+    --text:         #1c2333;
+    --text-sub:     #6c7a89;
+    --white:        #ffffff;
+    --row-alt:      #f8f9fb;
+    --tbl-header:   #f4f6fa;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--gray-light);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── 사이드바 ─────────────────────── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+  .sidebar-logo {
+    padding: 0 16px;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #2a3045;
+  }
+  .sidebar-logo span {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.3px;
+  }
+  .sidebar-logo span em { color: #fff; font-style: normal; }
+
+  .sidebar-menu { padding: 8px 0; flex: 1; }
+
+  .menu-group { margin-bottom: 4px; }
+  .menu-group-title {
+    padding: 8px 16px 4px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #4a5470;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 16px;
+    color: #8896b3;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+  }
+  .menu-item:hover { color: #cdd3e0; background: #1f2540; }
+  .menu-item.active {
+    color: #fff;
+    background: #252d48;
+    border-left-color: var(--primary);
+    font-weight: 500;
+  }
+  .menu-item .icon { width: 16px; text-align: center; font-size: 14px; opacity: 0.85; }
+  .menu-sub {
+    padding-left: 38px;
+    font-size: 12px;
+    color: #6c7a99;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+  }
+  .menu-sub:hover { color: #bcc4d8; }
+  .menu-sub.active { color: #a89ef5; font-weight: 500; }
+
+  /* ── 메인 ────────────────────────── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* 헤더 */
+  .header {
+    height: var(--header-h);
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-shrink: 0;
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+  }
+  .breadcrumb span { color: var(--text-sub); }
+  .breadcrumb .cur { color: var(--text); font-weight: 600; }
+  .breadcrumb .sep { color: #ccc; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-right .icon-btn {
+    width: 30px; height: 30px;
+    border-radius: 6px;
+    border: 1px solid var(--gray-border);
+    background: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: var(--gray);
+    position: relative;
+  }
+  .notif-dot {
+    position: absolute;
+    top: 4px; right: 4px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--danger);
+  }
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .user-avatar {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+  }
+
+  /* 콘텐츠 영역 */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* 페이지 타이틀 */
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .page-title .icon-circle {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--primary-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+  }
+
+  /* 요약 카드 */
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .sum-card {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .sum-card .card-icon {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .sum-card .card-info { flex: 1; }
+  .sum-card .card-label { font-size: 11px; color: var(--text-sub); margin-bottom: 2px; }
+  .sum-card .card-value { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+  .sum-card .card-sub { font-size: 10.5px; color: var(--text-sub); margin-top: 3px; }
+
+  .sum-card.total   .card-icon { background: #eef2ff; }
+  .sum-card.assigned .card-icon { background: #e0f0ff; }
+  .sum-card.ok      .card-icon { background: var(--ok-bg); }
+  .sum-card.warn    .card-icon { background: var(--warn-bg); }
+
+  /* 필터 바 */
+  .filter-bar {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .filter-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-sub);
+    display: flex; align-items: center; gap: 4px;
+    margin-right: 4px;
+  }
+  .filter-select {
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--gray-border);
+    border-radius: 5px;
+    font-size: 12.5px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--white);
+    cursor: pointer;
+    outline: none;
+  }
+  .filter-select:focus { border-color: var(--primary); }
+
+  .filter-divider { width: 1px; height: 18px; background: var(--gray-border); margin: 0 4px; }
+
+  .refresh-info {
+    margin-left: auto;
+    font-size: 11.5px;
+    color: var(--text-sub);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .refresh-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--ok);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+  }
+
+  /* 테이블 패널 */
+  .table-panel {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    overflow: hidden;
+    flex: 1;
+  }
+  .table-panel-header {
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--gray-border);
+  }
+  .table-panel-header .title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .total-count {
+    font-size: 11.5px;
+    color: var(--text-sub);
+    font-weight: 400;
+  }
+  .total-count em { color: var(--primary); font-style: normal; font-weight: 600; }
+
+  .table-actions { display: flex; gap: 6px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 5px;
+    font-size: 12.5px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-outline { background: #fff; color: var(--text); border-color: var(--gray-border); }
+  .btn-outline:hover { background: var(--gray-light); }
+  .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+  /* 데이터 테이블 */
+  table { width: 100%; border-collapse: collapse; }
+  thead tr {
+    background: var(--tbl-header);
+    border-bottom: 1px solid var(--gray-border);
+  }
+  thead th {
+    padding: 9px 12px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-sub);
+    white-space: nowrap;
+  }
+  thead th.center { text-align: center; }
+  tbody tr {
+    border-bottom: 1px solid #f0f2f5;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  tbody tr:hover { background: #f5f7ff; }
+  tbody tr.warn-row { background: #fff8f0; }
+  tbody tr.warn-row:hover { background: #ffefd9; }
+  tbody td {
+    padding: 9px 12px;
+    font-size: 12.5px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  tbody td.center { text-align: center; }
+  tbody td.sub { color: var(--text-sub); font-size: 12px; }
+
+  /* 배지 */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-ok     { background: var(--ok-bg);      color: var(--ok); }
+  .badge-warn   { background: var(--warn-bg);     color: var(--warn); }
+  .badge-gray   { background: #f0f2f5;            color: var(--gray); }
+  .badge-blue   { background: #e0f0ff;            color: #1a6bb5; }
+  .badge-purple { background: var(--primary-bg);  color: var(--primary); }
+  .badge-red    { background: var(--danger-bg);   color: var(--danger); }
+
+  .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+  /* 배터리 */
+  .battery-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .battery-track {
+    width: 36px; height: 10px;
+    background: #e8eaed;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid #d0d3d8;
+    position: relative;
+  }
+  .battery-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+  .battery-fill.high  { background: var(--ok); }
+  .battery-fill.mid   { background: var(--accent); }
+  .battery-fill.low   { background: var(--danger); }
+  .battery-pct { font-size: 11.5px; font-weight: 500; }
+  .battery-pct.low { color: var(--danger); }
+
+  /* 페이지네이션 */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 3px;
+    padding: 10px 16px;
+    border-top: 1px solid var(--gray-border);
+  }
+  .page-info { font-size: 12px; color: var(--text-sub); margin-right: 8px; }
+  .pg-btn {
+    width: 26px; height: 26px;
+    border: 1px solid var(--gray-border);
+    border-radius: 4px;
+    background: white;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text);
+  }
+  .pg-btn:hover { background: var(--gray-light); }
+  .pg-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+  /* ── 모달 오버레이 ──────────────────── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(1px);
+  }
+  .modal {
+    background: var(--white);
+    border-radius: 10px;
+    width: 480px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    overflow: hidden;
+    animation: modalIn 0.2s ease-out;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+  }
+  .modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--gray-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .modal-close {
+    width: 28px; height: 28px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--gray);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { background: var(--gray-light); }
+
+  .modal-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    align-items: center;
+    gap: 10px;
+  }
+  .form-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-sub);
+    white-space: nowrap;
+  }
+  .form-label .req { color: var(--danger); margin-left: 2px; }
+  .form-input {
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--gray-border);
+    border-radius: 5px;
+    font-size: 12.5px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .form-input:focus { border-color: var(--primary); }
+  .form-input.readonly { background: var(--tbl-header); color: var(--text); cursor: default; }
+  .form-input-group { display: flex; gap: 6px; align-items: center; }
+  .hint-text { font-size: 11px; color: var(--primary); margin-top: 2px; margin-left: 100px; }
+
+  .form-select {
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--gray-border);
+    border-radius: 5px;
+    font-size: 12.5px;
+    font-family: inherit;
+    color: var(--text);
+    background: white;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+  }
+  .form-select:focus { border-color: var(--primary); }
+
+  .modal-footer {
+    padding: 14px 20px;
+    border-top: 1px solid var(--gray-border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  /* 알림 토스트 */
+  .toast-wrap {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 2000;
+  }
+  .toast {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    min-width: 280px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    animation: toastIn 0.25s ease-out;
+  }
+  @keyframes toastIn {
+    from { opacity:0; transform: translateX(20px); }
+    to   { opacity:1; transform: translateX(0); }
+  }
+  .toast-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .toast-content .toast-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .toast-content .toast-msg   { font-size: 12px; color: var(--text-sub); margin-top: 2px; }
+  .toast.ok   { border-left: 3px solid var(--ok); }
+  .toast.warn { border-left: 3px solid var(--warn); }
+  .toast.info { border-left: 3px solid var(--primary); }
+
+  /* 확인 다이얼로그 */
+  .confirm-modal { width: 360px; }
+  .confirm-body {
+    padding: 22px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .confirm-icon { font-size: 36px; }
+  .confirm-title { font-size: 14px; font-weight: 700; color: var(--text); }
+  .confirm-desc  { font-size: 12.5px; color: var(--text-sub); line-height: 1.6; }
+
+  /* 빈 상태 */
+  .empty-state {
+    padding: 48px;
+    text-align: center;
+    color: var(--text-sub);
+    font-size: 13px;
+  }
+  .empty-state .empty-icon { font-size: 36px; margin-bottom: 10px; opacity: 0.4; }
+
+  /* 탭 전환 */
+  .demo-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    background: #1a1f2e;
+    align-items: center;
+  }
+  .demo-tab {
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #8896b3;
+    border: 1px solid #2a3045;
+    background: none;
+    font-family: inherit;
+  }
+  .demo-tab:hover { color: #cdd3e0; border-color: #3a4560; }
+  .demo-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .demo-tab-label {
+    color: #4a5470;
+    font-size: 10.5px;
+    margin-right: 4px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: flex; height: calc(100vh - 40px); }
+</style>
+</head>
+<body>
+
+<!-- 탭 컨트롤 -->
+<div style="position:fixed;top:0;left:0;right:0;z-index:9999;">
+  <div class="demo-tabs">
+    <span class="demo-tab-label">📐 화면 선택</span>
+    <button class="demo-tab active" onclick="showScreen('s1',this)">① 장치 할당 현황</button>
+    <button class="demo-tab" onclick="showScreen('s2',this)">② 수집 이력 조회</button>
+    <button class="demo-tab" onclick="showScreen('s3',this)">③ 장치 할당 모달</button>
+    <button class="demo-tab" onclick="showScreen('s4',this)">④ 장치 해제 확인</button>
+    <button class="demo-tab" onclick="showScreen('s5',this)">⑤ 토스트 알림</button>
+  </div>
+</div>
+
+<div style="margin-top:40px; width:100%; position:relative;">
+
+<!-- ══════════════════════════════════════
+     SCREEN 1: 장치 할당 현황 (FNT-003)
+════════════════════════════════════════ -->
+<div id="s1" class="screen active">
+  <!-- 사이드바 -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <span>Wearable<em>Monitor</em></span>
+    </div>
+    <div class="sidebar-menu">
+      <div class="menu-group">
+        <div class="menu-group-title">기준데이터</div>
+        <div class="menu-item"><span class="icon">👤</span> 환자 정보 관리</div>
+        <div class="menu-item"><span class="icon">⌚</span> 장치 정보 관리</div>
+      </div>
+      <div class="menu-group">
+        <div class="menu-group-title">현황 모니터링</div>
+        <div class="menu-item active"><span class="icon">📡</span> 장치 할당 현황</div>
+        <div class="menu-item"><span class="icon">📊</span> 데이터 현황 집계</div>
+      </div>
+      <div class="menu-group">
+        <div class="menu-group-title">이력 관리</div>
+        <div class="menu-item"><span class="icon">🔄</span> 할당/해제 이력</div>
+        <div class="menu-item"><span class="icon">📋</span> 수집 데이터 이력</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 메인 -->
+  <div class="main">
+    <div class="header">
+      <div class="breadcrumb">
+        <span>현황 모니터링</span>
+        <span class="sep">›</span>
+        <span class="cur">장치 할당 현황</span>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn">🔔<span class="notif-dot"></span></button>
+        <button class="icon-btn">⛶</button>
+        <div class="user-info">
+          <div class="user-avatar">관</div>
+          <span>관리자02</span> ▾
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="page-title">
+        <div class="icon-circle">📡</div>
+        장치 할당 현황
+      </div>
+
+      <!-- 요약 카드 4개 -->
+      <div class="summary-cards">
+        <div class="sum-card total">
+          <div class="card-icon">👥</div>
+          <div class="card-info">
+            <div class="card-label">전체 환자</div>
+            <div class="card-value">50</div>
+            <div class="card-sub">등록 환자 전체</div>
+          </div>
+        </div>
+        <div class="sum-card assigned">
+          <div class="card-icon">⌚</div>
+          <div class="card-info">
+            <div class="card-label">장치 할당</div>
+            <div class="card-value">43</div>
+            <div class="card-sub">미할당 7명</div>
+          </div>
+        </div>
+        <div class="sum-card ok">
+          <div class="card-icon">✅</div>
+          <div class="card-info">
+            <div class="card-label">정상 수집</div>
+            <div class="card-value" style="color:var(--ok)">38</div>
+            <div class="card-sub">24시간 이내</div>
+          </div>
+        </div>
+        <div class="sum-card warn">
+          <div class="card-icon">⚠️</div>
+          <div class="card-info">
+            <div class="card-label">미수집 (이상)</div>
+            <div class="card-value" style="color:var(--warn)">5</div>
+            <div class="card-sub">24시간 초과</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 필터 -->
+      <div class="filter-bar">
+        <div class="filter-label">☰ 필터</div>
+        <select class="filter-select">
+          <option>수집 상태 : 전체</option>
+          <option>✅ 정상 (24h 이내)</option>
+          <option>⚠️ 미수집 (24h 초과)</option>
+          <option>— 미할당</option>
+        </select>
+        <div class="filter-divider"></div>
+        <input type="text" class="filter-select" placeholder="🔍  환자명 또는 코드 검색" style="width:200px;">
+        <div class="refresh-info">
+          <span class="refresh-dot"></span>
+          다음 갱신 <strong>4분 22초</strong>
+        </div>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="table-panel">
+        <div class="table-panel-header">
+          <div class="title">
+            전체 환자 현황
+            <span class="total-count">총 <em>50</em>명</span>
+          </div>
+          <div class="table-actions">
+            <button class="btn btn-outline">📥 엑셀 다운로드</button>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>환자 코드</th>
+              <th>환자명</th>
+              <th>장치 시리얼</th>
+              <th>모델명</th>
+              <th>할당일</th>
+              <th class="center">배터리</th>
+              <th>최종 수집 일시</th>
+              <th class="center">수집 상태</th>
+              <th class="center">액션</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="warn-row" onclick="">
+              <td class="sub">1</td>
+              <td style="font-weight:600;color:var(--primary)">PT-0003</td>
+              <td>박지수</td>
+              <td class="sub">SN-W7-00341</td>
+              <td class="sub">Galaxy Watch 7</td>
+              <td class="sub">2025-12-01</td>
+              <td class="center">
+                <div class="battery-bar">
+                  <div class="battery-track"><div class="battery-fill low" style="width:12%"></div></div>
+                  <span class="battery-pct low">12%</span>
+                </div>
+              </td>
+              <td style="color:var(--warn);font-weight:500">2026-02-26 10:14</td>
+              <td class="center"><span class="badge badge-warn"><span class="badge-dot"></span>⚠ 미수집</span></td>
+              <td class="center"><button class="btn btn-outline" style="height:26px;font-size:11px;padding:0 8px">조회</button></td>
+            </tr>
+            <tr class="warn-row">
+              <td class="sub">2</td>
+              <td style="font-weight:600;color:var(--primary)">PT-0011</td>
+              <td>최민준</td>
+              <td class="sub">SN-W7-00287</td>
+              <td class="sub">Galaxy Watch 7</td>
+              <td class="sub">2025-12-08</td>
+              <td class="center">
+                <div class="battery-bar">
+                  <div class="battery-track"><div class="battery-fill low" style="width:8%"></div></div>
+                  <span class="battery-pct low">8%</span>
+                </div>
+              </td>
+              <td style="color:var(--warn);font-weight:500">2026-02-25 22:47</td>
+              <td class="center"><span class="badge badge-warn"><span class="badge-dot"></span>⚠ 미수집</span></td>
+              <td class="center"><button class="btn btn-outline" style="height:26px;font-size:11px;padding:0 8px">조회</button></td>
+            </tr>
+            <tr>
+              <td class="sub">3</td>
+              <td style="font-weight:600;color:var(--primary)">PT-0001</td>
+              <td>김영희</td>
+              <td class="sub">SN-W7-00129</td>
+              <td class="sub">Galaxy Watch 7</td>
+              <td class="sub">2025-11-15</td>
+              <td class="center">
+                <div class="battery-bar">
+                  <div class="battery-track"><div class="battery-fill high" style="width:84%"></div></div>
+                  <span class="battery-pct">84%</span>
+                </div>
+              </td>
+              <td>2026-02-28 08:32</td>
+              <td class="center"><span class="badge badge-ok"><span class="badge-dot"></span>✅ 정상</span></td>
+              <td class="center"><button class="btn btn-outline" style="height:26px;font-size:11px;padding:0 8px">조회</button></td>
+            </tr>
+            <tr>
+              <td class="sub">4</td>
+              <td style="font-weight:600;color:var(--primary)">PT-0002</td>
+              <td>이철수</td>
+              <td class="sub">SN-W7-00130</td>
+              <td class="sub">Galaxy Watch 7</td>
+              <td class="sub">2025-11-20</td>
+              <td class="center">
+                <div class="battery-bar">
+                  <div class="battery-track"><div class="battery-fill mid" style="width:47%"></div></div>
+                  <span class="battery-pct">47%</span>
+                </div>
+              </td>
+              <td>2026-02-28 09:04</td>
+              <td class="center"><span class="badge badge-ok"><span class="badge-dot"></span>✅ 정상</span></td>
+              <td class="center"><button class="btn btn-outline" style="height:26px;font-size:11px;padding:0 8px">조회</button></td>
+            </tr>
+            <tr>
+              <td class="sub">5</td>
+              <td style="font-weight:600;color:var(--primary)">PT-0004</td>
+              <td>정수빈</td>
+              <td class="sub">SN-W7-00204</td>
+              <td class="sub">Galaxy Watch 7</td>
+              <td class="sub">2025-12-03</td>
+              <td class="center">
+                <div class="battery-bar">
+                  <div class="battery-track"><div class="battery-fill high" style="width:92%"></div></div>
+                  <span class="battery-pct">92%</span>
+                </div>
+              </td>
+              <td>2026-02-28 07:51</td>
+              <td class="center"><span class="badge badge-ok"><span class="badge-dot"></span>✅ 정상</span></td>
+              <td class="center"><button class="btn btn-outline" style="height:26px;font-size:11px;padding:0 8px">조회</button></td>
+            </tr>
+            <tr>
+              <td class="sub">6</td>
+              <td style="font-weight:600;color:var(--primary)">PT-0007</td>
+              <td>한소영</td>
+              <td class="sub">SN-W7-00255</td>
+              <td class="sub">Galaxy Watch 7</td>
+              <td class="sub">2025-12-10</td>
+              <td class="center">
+                <div class="battery-bar">
+                  <div class="battery-track"><div class="battery-fill high" style="width:76%"></div></div>
+                  <span class="battery-pct">76%</span>
+                </div>
+              </td>
+              <td>2026-02-28 08:18</td>
+              <td class="center"><span class="badge badge-ok"><span class="badge-dot"></span>✅ 정상</span></td>
+              <td class="center"><button class="btn btn-outline" style="height:26px;font-size:11px;padding:0 8px">조회</button></td>
+            </tr>
+            <tr>
+              <td class="sub">7</td>
+              <td style="color:var(--gray)">PT-0009</td>
+              <td style="color:var(--gray)">강다은</td>
+              <td class="sub">—</td>
+              <td class="sub">—</td>
+              <td class="sub">—</td>
+              <td class="center sub">—</td>
+              <td class="sub">—</td>
+              <td class="center"><span class="badge badge-gray">— 미할당</span></td>
+              <td class="center"><button class="btn btn-primary" style="height:26px;font-size:11px;padding:0 8px">할당</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pagination">
+          <span class="page-info">1-20 / 50건</span>
+          <button class="pg-btn">«</button>
+          <button class="pg-btn">‹</button>
+          <button class="pg-btn active">1</button>
+          <button class="pg-btn">2</button>
+          <button class="pg-btn">3</button>
+          <button class="pg-btn">›</button>
+          <button class="pg-btn">»</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 2: 수집 이력 조회 (FNT-006)
+════════════════════════════════════════ -->
+<div id="s2" class="screen">
+  <div class="sidebar">
+    <div class="sidebar-logo"><span>Wearable<em>Monitor</em></span></div>
+    <div class="sidebar-menu">
+      <div class="menu-group">
+        <div class="menu-group-title">기준데이터</div>
+        <div class="menu-item"><span class="icon">👤</span> 환자 정보 관리</div>
+        <div class="menu-item"><span class="icon">⌚</span> 장치 정보 관리</div>
+      </div>
+      <div class="menu-group">
+        <div class="menu-group-title">현황 모니터링</div>
+        <div class="menu-item"><span class="icon">📡</span> 장치 할당 현황</div>
+        <div class="menu-item"><span class="icon">📊</span> 데이터 현황 집계</div>
+      </div>
+      <div class="menu-group">
+        <div class="menu-group-title">이력 관리</div>
+        <div class="menu-item"><span class="icon">🔄</span> 할당/해제 이력</div>
+        <div class="menu-item active"><span class="icon">📋</span> 수집 데이터 이력</div>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="header">
+      <div class="breadcrumb">
+        <span>이력 관리</span><span class="sep">›</span>
+        <span class="cur">수집 데이터 이력</span>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn">🔔<span class="notif-dot"></span></button>
+        <div class="user-info"><div class="user-avatar">관</div><span>관리자02</span> ▾</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="page-title"><div class="icon-circle">📋</div>수집 데이터 이력</div>
+
+      <!-- 조회 조건 패널 -->
+      <div style="background:white;border:1px solid var(--gray-border);border-radius:8px;padding:14px 16px;">
+        <div style="font-size:12.5px;font-weight:600;color:var(--text-sub);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--gray-border);">☰ 조회 조건</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:end;">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:5px;">환자 선택 <span style="color:var(--danger)">*</span></div>
+            <select class="form-select" style="width:100%">
+              <option>PT-0001  김영희</option>
+              <option>PT-0002  이철수</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:5px;">수집 항목</div>
+            <select class="form-select" style="width:100%">
+              <option>전체 항목</option>
+              <option>심박수</option>
+              <option>SpO2</option>
+              <option>수면 시간</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:5px;">조회 기간</div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input type="text" class="form-input" value="2026-02-01" style="width:120px">
+              <span style="color:var(--gray);font-size:12px">~</span>
+              <input type="text" class="form-input" value="2026-02-28" style="width:120px">
+              <button class="btn btn-primary">조회</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 결과 알림 배너 -->
+      <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:6px;padding:9px 14px;font-size:12px;color:#8a6400;display:flex;align-items:center;gap:8px;">
+        ⚠️ 총 <strong>5,247건</strong> 중 최신 5,000건만 표시합니다. 전체 데이터는 엑셀 다운로드를 이용해 주세요.
+        <button class="btn btn-primary" style="margin-left:auto;height:26px;font-size:11.5px">📥 엑셀 전체 다운로드</button>
+      </div>
+
+      <div class="table-panel">
+        <div class="table-panel-header">
+          <div class="title">수집 이력 <span class="total-count">총 <em>5,000</em>건 표시 중</span></div>
+          <div class="table-actions">
+            <button class="btn btn-outline">📥 엑셀 다운로드</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>측정 일시</th>
+              <th>항목명</th>
+              <th class="center">분류</th>
+              <th class="center">측정값</th>
+              <th class="center">단위</th>
+              <th class="center">지속 시간</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:#fffde7">
+              <td class="sub">1</td>
+              <td>2026-02-28 09:32:14</td>
+              <td style="font-weight:500">심박수</td>
+              <td class="center"><span class="badge" style="background:#fffde7;color:#8a6400">생체신호</span></td>
+              <td class="center" style="font-weight:600">74</td>
+              <td class="center sub">BPM</td>
+              <td class="center sub">—</td>
+            </tr>
+            <tr style="background:#fffde7">
+              <td class="sub">2</td>
+              <td>2026-02-28 09:02:05</td>
+              <td style="font-weight:500">스트레스 지수</td>
+              <td class="center"><span class="badge" style="background:#fffde7;color:#8a6400">생체신호</span></td>
+              <td class="center" style="font-weight:600">32</td>
+              <td class="center sub">점</td>
+              <td class="center sub">—</td>
+            </tr>
+            <tr style="background:#e3f2fd">
+              <td class="sub">3</td>
+              <td>2026-02-28 08:55:00</td>
+              <td style="font-weight:500">걸음 수</td>
+              <td class="center"><span class="badge" style="background:#e3f2fd;color:#1a5276">활동</span></td>
+              <td class="center" style="font-weight:600">2,341</td>
+              <td class="center sub">걸음</td>
+              <td class="center sub">—</td>
+            </tr>
+            <tr style="background:#f3e5f5">
+              <td class="sub">4</td>
+              <td>2026-02-28 07:18:00</td>
+              <td style="font-weight:500">수면 시간</td>
+              <td class="center"><span class="badge" style="background:#f3e5f5;color:#6c3483">수면</span></td>
+              <td class="center" style="font-weight:600">6.5</td>
+              <td class="center sub">시간</td>
+              <td class="center sub">6시간 31분</td>
+            </tr>
+            <tr style="background:#f3e5f5">
+              <td class="sub">5</td>
+              <td>2026-02-28 07:18:00</td>
+              <td style="font-weight:500">수면 단계</td>
+              <td class="center"><span class="badge" style="background:#f3e5f5;color:#6c3483">수면</span></td>
+              <td class="center" style="font-weight:600">DEEP</td>
+              <td class="center sub">—</td>
+              <td class="center sub">1시간 12분</td>
+            </tr>
+            <tr style="background:#e8f5e9">
+              <td class="sub">6</td>
+              <td>2026-02-28 07:00:00</td>
+              <td style="font-weight:500">에너지 점수</td>
+              <td class="center"><span class="badge" style="background:#e8f5e9;color:#1a6b3c">AI 종합</span></td>
+              <td class="center" style="font-weight:600">78</td>
+              <td class="center sub">점</td>
+              <td class="center sub">—</td>
+            </tr>
+            <tr style="background:#fffde7">
+              <td class="sub">7</td>
+              <td>2026-02-28 06:32:00</td>
+              <td style="font-weight:500">SpO2 (수면)</td>
+              <td class="center"><span class="badge" style="background:#fffde7;color:#8a6400">생체신호</span></td>
+              <td class="center" style="font-weight:600">97</td>
+              <td class="center sub">%</td>
+              <td class="center sub">—</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <span class="page-info">1-20 / 5,000건</span>
+          <button class="pg-btn">«</button><button class="pg-btn">‹</button>
+          <button class="pg-btn active">1</button>
+          <button class="pg-btn">2</button><button class="pg-btn">…</button>
+          <button class="pg-btn">250</button>
+          <button class="pg-btn">›</button><button class="pg-btn">»</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 3: 장치 할당 모달
+════════════════════════════════════════ -->
+<div id="s3" class="screen" style="position:relative;background:var(--gray-light);">
+  <!-- 배경 흐림 레이어 -->
+  <div style="position:absolute;inset:0;background:rgba(24,29,46,0.5);backdrop-filter:blur(1px);z-index:10;"></div>
+
+  <!-- 배경 화면 (흐릿하게) -->
+  <div class="sidebar">
+    <div class="sidebar-logo"><span>Wearable<em>Monitor</em></span></div>
+  </div>
+  <div class="main" style="opacity:0.4">
+    <div class="header"><div class="breadcrumb"><span>기준데이터</span><span class="sep">›</span><span class="cur">환자 정보 관리</span></div></div>
+    <div class="content"><div class="page-title"><div class="icon-circle">👤</div>환자 정보 관리</div></div>
+  </div>
+
+  <!-- 모달 -->
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:20;">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">⌚ 장치 할당</div>
+        <button class="modal-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-label">환자</div>
+          <input class="form-input readonly" value="PT-0009  강다은" readonly>
+        </div>
+        <div class="form-row">
+          <div class="form-label">장치 선택 <span class="req">*</span></div>
+          <div class="form-input-group" style="flex:1">
+            <select class="form-select">
+              <option>SN-W7-00412  Galaxy Watch 7 (AVAILABLE)</option>
+              <option>SN-W7-00418  Galaxy Watch 7 (AVAILABLE)</option>
+              <option>SN-W7-00424  Galaxy Watch 7 (AVAILABLE)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">모니터링 시작일 <span class="req">*</span></div>
+          <input class="form-input" value="2026-02-28">
+        </div>
+        <div class="form-row">
+          <div class="form-label">모니터링 종료일</div>
+          <input class="form-input" placeholder="미입력 시 지속 모니터링">
+        </div>
+        <div class="form-row" style="align-items:flex-start">
+          <div class="form-label" style="padding-top:6px">할당 목적</div>
+          <textarea class="form-input" rows="2" style="height:auto;padding:7px 10px;resize:none;font-family:inherit">심박수 및 수면 패턴 모니터링</textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline">취소</button>
+        <button class="btn btn-primary">✓ 확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 4: 장치 해제 확인 다이얼로그
+════════════════════════════════════════ -->
+<div id="s4" class="screen" style="position:relative;background:var(--gray-light);">
+  <div style="position:absolute;inset:0;background:rgba(24,29,46,0.5);backdrop-filter:blur(1px);z-index:10;"></div>
+  <div class="sidebar"><div class="sidebar-logo"><span>Wearable<em>Monitor</em></span></div></div>
+  <div class="main" style="opacity:0.4">
+    <div class="header"></div>
+  </div>
+
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:20;">
+    <div class="modal confirm-modal">
+      <div class="modal-header">
+        <div class="modal-title">장치 해제 확인</div>
+        <button class="modal-close">✕</button>
+      </div>
+      <div class="confirm-body">
+        <div class="confirm-icon">🔓</div>
+        <div class="confirm-title">장치를 해제하시겠습니까?</div>
+        <div class="confirm-desc">
+          <strong>PT-0001  김영희</strong> 환자의<br>
+          장치 <strong>SN-W7-00129</strong> 할당을 해제합니다.<br><br>
+          해제 후 해당 장치는 <span style="color:var(--ok);font-weight:600">AVAILABLE</span> 상태로 변경되어<br>
+          다른 환자에게 할당할 수 있습니다.
+        </div>
+        <div style="width:100%;margin-top:4px;">
+          <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:5px;text-align:left;">해제 사유 (선택)</div>
+          <textarea class="form-input" rows="2" style="height:auto;padding:7px 10px;resize:none;font-family:inherit;width:100%" placeholder="해제 사유를 입력해 주세요."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline">취소</button>
+        <button class="btn btn-danger">🔓 해제 확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 5: 토스트 알림
+════════════════════════════════════════ -->
+<div id="s5" class="screen" style="position:relative;">
+  <div class="sidebar">
+    <div class="sidebar-logo"><span>Wearable<em>Monitor</em></span></div>
+    <div class="sidebar-menu">
+      <div class="menu-group">
+        <div class="menu-group-title">현황 모니터링</div>
+        <div class="menu-item active"><span class="icon">📡</span> 장치 할당 현황</div>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="header">
+      <div class="breadcrumb"><span>현황 모니터링</span><span class="sep">›</span><span class="cur">장치 할당 현황</span></div>
+    </div>
+    <div class="content">
+      <div style="color:var(--text-sub);font-size:13px;padding:20px;background:white;border-radius:8px;border:1px solid var(--gray-border)">
+        우측 상단에서 다양한 알림 토스트 유형을 확인하세요.
+      </div>
+    </div>
+  </div>
+
+  <!-- 토스트 알림 -->
+  <div class="toast-wrap">
+    <div class="toast ok">
+      <div class="toast-icon">✅</div>
+      <div class="toast-content">
+        <div class="toast-title">장치 할당 완료</div>
+        <div class="toast-msg">PT-0009 강다은 환자에게 SN-W7-00412가 할당되었습니다.</div>
+      </div>
+    </div>
+    <div class="toast warn">
+      <div class="toast-icon">⚠️</div>
+      <div class="toast-content">
+        <div class="toast-title">미수집 환자 감지</div>
+        <div class="toast-msg">PT-0003 박지수 환자의 마지막 수집이 32시간 전입니다.</div>
+      </div>
+    </div>
+    <div class="toast info">
+      <div class="toast-icon">📥</div>
+      <div class="toast-content">
+        <div class="toast-title">엑셀 다운로드 준비 중</div>
+        <div class="toast-msg">5,247건의 데이터를 처리하고 있습니다...</div>
+      </div>
+    </div>
+    <div class="toast" style="border-left:3px solid var(--danger)">
+      <div class="toast-icon">🔋</div>
+      <div class="toast-content">
+        <div class="toast-title">배터리 부족 경고</div>
+        <div class="toast-msg">SN-W7-00341 (PT-0003) 배터리 잔량 12%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /margin-top wrapper -->
+
+<script>
+function showScreen(id, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.demo-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

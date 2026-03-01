@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/wearable_db
+    username: wearable
+    password: wearable1234
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  sql:
+    init:
+      mode: always
+      schema-locations:
+        - classpath:sql/schema.sql
+        - classpath:sql/timescaledb.sql
+
+  data:
+    redis:
+      host: localhost
+      port: 6740
+
+jwt:
+  secret: dev-secret-key-must-be-at-least-256-bits-long-for-hs256-algorithm
+
+logging:
+  level:
+    com.wearable.monitor: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE

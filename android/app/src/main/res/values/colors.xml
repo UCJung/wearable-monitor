@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- STYLE_GUIDE_ANDROID.md 섹션 14 기준 -->
+<resources>
+    <!-- Primary -->
+    <color name="primary">#6B5CE7</color>
+    <color name="primary_dark">#5647CC</color>
+    <color name="primary_bg">#EDE9FF</color>
+    <color name="accent">#F5A623</color>
+
+    <!-- Semantic -->
+    <color name="ok">#27AE60</color>
+    <color name="ok_bg">#E8F8F0</color>
+    <color name="warn">#E67E22</color>
+    <color name="warn_bg">#FFF3E0</color>
+    <color name="danger">#E74C3C</color>
+    <color name="danger_bg">#FDECEA</color>
+
+    <!-- Neutral -->
+    <color name="text_primary">#1C2333</color>
+    <color name="text_secondary">#6C7A89</color>
+    <color name="border">#E0E4EA</color>
+    <color name="bg_page">#F0F2F5</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_input">#F4F6FA</color>
+    <color name="white">#FFFFFF</color>
+    <color name="divider">#F0F2F5</color>
+
+    <!-- Category (수집 항목 분류) -->
+    <color name="cat_vital_bg">#FFFDE7</color>
+    <color name="cat_vital_text">#8A6400</color>
+    <color name="cat_activity_bg">#E3F2FD</color>
+    <color name="cat_activity_text">#1A5276</color>
+    <color name="cat_sleep_bg">#F3E5F5</color>
+    <color name="cat_sleep_text">#6C3483</color>
+    <color name="cat_ai_bg">#E8F5E9</color>
+    <color name="cat_ai_text">#1A6B3C</color>
+
+    <!-- Special -->
+    <color name="header_dark">#181D2E</color>
+    <color name="sleep_deep">#5647CC</color>
+    <color name="sleep_rem">#8A7EE8</color>
+    <color name="sleep_light">#E0E0E0</color>
+    <color name="step_gauge_end">#8A7EE8</color>
+</resources>

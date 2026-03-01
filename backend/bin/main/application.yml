@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: wearable-monitor
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    open-in-view: false
+
+  data:
+    redis:
+      timeout: 3000ms
+
+jwt:
+  access-token-expiry: 3600000      # 1시간 (ms)
+  refresh-token-expiry: 604800000   # 7일 (ms)

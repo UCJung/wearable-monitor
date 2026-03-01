@@ -1,0 +1,68 @@
+# ===== Java / Spring Boot =====
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+target/
+build/
+out/
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# ===== Node / Frontend =====
+node_modules/
+dist/
+.vite/
+.next/
+.nuxt/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+*.local
+
+# ===== Android =====
+*.apk
+*.aab
+*.dex
+*.ap_
+*.class
+local.properties
+.cxx/
+android/build/
+android/.gradle/
+android/app/release/
+android/captures/
+android/keystore/
+
+# ===== Environment & Secrets =====
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# ===== IDE =====
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Logs =====
+logs/
+*.log
+
+# ===== Docker =====
+docker-compose.override.yml

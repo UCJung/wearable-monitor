@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WearableMonitor</string>
+    <string name="app_title">환자 모니터링</string>
+    <string name="app_subtitle">웨어러블 기반 건강 데이터 수집</string>
+
+    <!-- Login -->
+    <string name="hint_patient_id">환자 ID (예: PT-0001)</string>
+    <string name="hint_password">비밀번호</string>
+    <string name="btn_login">로그인</string>
+    <string name="login_hint">담당 의료진에게 받은 ID와 비밀번호를 입력하세요.</string>
+
+    <!-- Guide -->
+    <string name="guide_title">설정 가이드</string>
+    <string name="btn_previous">이전</string>
+    <string name="btn_next">다음 →</string>
+    <string name="btn_start_setup">설정 시작하기 →</string>
+
+    <string name="guide_step1_title">1단계: 워치 페어링</string>
+    <string name="guide_step1_desc">Galaxy Watch 7을 스마트폰과 블루투스로 페어링합니다.\nGalaxy Wearable 앱에서 연결 상태를 확인하세요.</string>
+
+    <string name="guide_step2_title">2단계: Samsung Health 설정</string>
+    <string name="guide_step2_desc">Samsung Health 앱에서 심박수 연속 측정을 활성화합니다.\n설정 → 심박수 → 지속 측정을 켜주세요.</string>
+
+    <string name="guide_step3_title">3단계: Health Connect 설치</string>
+    <string name="guide_step3_desc">Health Connect 앱이 설치되어 있는지 확인합니다.\n설치되어 있지 않다면 Play 스토어에서 다운로드하세요.</string>
+
+    <string name="guide_step4_title">4단계: 데이터 항목 설정</string>
+    <string name="guide_step4_desc">Samsung Health에서 수면 중 SpO2 측정을 활성화합니다.\n설정 → 수면 → SpO2 모니터링을 켜주세요.</string>
+
+    <string name="guide_step5_title">5단계: 배터리 최적화 해제</string>
+    <string name="guide_step5_desc">백그라운드 수집이 중단되지 않도록 배터리 최적화를 해제합니다.\n다음 설정에서 안내합니다.</string>
+
+    <!-- Setup Wizard -->
+    <string name="wizard_title">초기 설정</string>
+    <string name="btn_complete">설정 완료</string>
+
+    <string name="step1_title">Health Connect 권한</string>
+    <string name="step1_desc">건강 데이터를 수집하려면 아래 권한이 필요합니다.</string>
+    <string name="btn_request_permissions">권한 허용하기</string>
+
+    <string name="step2_title">워치 연결 확인</string>
+    <string name="step2_desc">Galaxy Watch 7이 연결되어 있는지 확인합니다.</string>
+    <string name="watch_connected">워치가 연결되어 있습니다.</string>
+    <string name="watch_disconnected">워치 연결을 확인해 주세요.\n Galaxy Wearable 앱에서 연결 상태를 확인하세요.</string>
+
+    <string name="step3_title">심박수 연속 측정</string>
+    <string name="step3_desc">Samsung Health 앱에서 심박수 지속 측정을 활성화해 주세요.</string>
+    <string name="btn_open_samsung_health">Samsung Health 열기</string>
+
+    <string name="step4_title">수면 SpO2 활성화</string>
+    <string name="step4_desc">Samsung Health 앱에서 수면 중 SpO2 모니터링을 활성화해 주세요.</string>
+
+    <string name="step5_title">배터리 최적화 해제</string>
+    <string name="step5_desc">백그라운드 데이터 수집이 중단되지 않도록 이 앱의 배터리 최적화를 해제합니다.</string>
+    <string name="btn_disable_optimization">배터리 최적화 해제</string>
+    <string name="optimization_disabled">배터리 최적화가 해제되었습니다.</string>
+    <string name="optimization_enabled">배터리 최적화 해제가 필요합니다.</string>
+
+    <string name="permission_granted">허용됨</string>
+    <string name="permission_required">허용 필요</string>
+    <string name="step_optional">(선택)</string>
+    <string name="step_required">(필수)</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_greeting">안녕하세요 👋</string>
+    <string name="connection_connected">연결됨</string>
+    <string name="connection_disconnected">연결 끊김</string>
+    <string name="last_sync_format">마지막 동기화: %s</string>
+
+    <string name="section_vital">❤️ 생체신호</string>
+    <string name="section_activity">🏃 활동</string>
+    <string name="section_sleep">😴 수면</string>
+    <string name="section_energy">⚡ AI 종합</string>
+
+    <string name="card_heart_rate">심박수</string>
+    <string name="card_spo2">산소포화도</string>
+    <string name="card_stress">스트레스</string>
+    <string name="card_skin_temp">피부 온도</string>
+    <string name="card_steps">걸음 수</string>
+    <string name="card_calories">소모 칼로리</string>
+    <string name="card_exercise">운동 시간</string>
+    <string name="card_sleep">수면 시간</string>
+    <string name="card_energy">에너지 점수</string>
+
+    <string name="unit_bpm">BPM</string>
+    <string name="unit_percent">%</string>
+    <string name="unit_celsius">°C</string>
+    <string name="unit_steps">걸음</string>
+    <string name="unit_kcal">kcal</string>
+    <string name="unit_minutes">분</string>
+    <string name="unit_hours">시간</string>
+    <string name="unit_ms">ms</string>
+
+    <string name="no_data">—</string>
+    <string name="no_data_desc">수집 없음</string>
+    <string name="steps_goal_format">목표: %s보</string>
+
+    <string name="sleep_score_format">수면 점수 %d</string>
+    <string name="deep_sleep_pct">깊은잠 %d%%</string>
+    <string name="rem_sleep_pct">REM %d%%</string>
+    <string name="light_sleep_pct">얕은잠 %d%%</string>
+
+    <string name="energy_value_format">%d / 100</string>
+    <string name="energy_good">좋음 · 컨디션이 양호합니다</string>
+    <string name="energy_normal">보통 수준 · 충분한 수면 권장</string>
+    <string name="energy_low">낮음 · 휴식이 필요합니다</string>
+
+    <string name="hr_range_format">최소 %s · 최대 %s</string>
+
+    <string name="warn_no_data_title">데이터 미수집 경고</string>
+    <string name="warn_no_data_desc">워치 연결 상태를 확인해 주세요.</string>
+    <string name="warn_battery_title">배터리 부족</string>
+    <string name="warn_battery_desc">워치 배터리가 부족합니다. 충전해 주세요.</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_dashboard">현황</string>
+    <string name="nav_history">이력</string>
+    <string name="nav_settings">설정</string>
+</resources>

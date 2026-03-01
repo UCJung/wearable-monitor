@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header -->
+            <LinearLayout
+                android:id="@+id/headerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_header_gradient"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/content_padding_horizontal"
+                android:paddingTop="16dp"
+                android:paddingBottom="20dp">
+
+                <!-- Top row: title + connection badge -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        tools:text="안녕하세요 👋" />
+
+                    <!-- Connection badge -->
+                    <LinearLayout
+                        android:id="@+id/badgeConnection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/badge_height"
+                        android:background="@drawable/bg_connection_badge"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="@dimen/badge_padding_horizontal"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:id="@+id/dotConnection"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/bg_badge_ok" />
+
+                        <TextView
+                            android:id="@+id/tvConnectionStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="11sp"
+                            android:textColor="@color/white"
+                            tools:text="연결됨" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Subtitle date -->
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="12sp"
+                    android:textColor="#D9FFFFFF"
+                    tools:text="2026년 3월 1일 (토)" />
+
+                <!-- Last sync -->
+                <TextView
+                    android:id="@+id/tvLastSync"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="end"
+                    android:textSize="11sp"
+                    android:textColor="#D9FFFFFF"
+                    tools:text="마지막 동기화: 09:32" />
+            </LinearLayout>
+
+            <!-- Warning banners area -->
+            <LinearLayout
+                android:id="@+id/warningContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/content_padding_horizontal"
+                android:paddingTop="@dimen/content_padding_vertical"
+                android:visibility="gone" />
+
+            <!-- Content area -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/content_padding_horizontal"
+                android:paddingTop="@dimen/content_padding_vertical"
+                android:paddingBottom="@dimen/content_padding_vertical">
+
+                <!-- Vital Signs Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/section_title_margin_top"
+                    android:layout_marginBottom="@dimen/section_title_margin_bottom"
+                    android:text="@string/section_vital"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary"
+                    android:textAllCaps="true" />
+
+                <!-- Vital row 1: Heart Rate + SpO2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <include
+                        android:id="@+id/cardHeartRate"
+                        layout="@layout/item_data_card"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/card_grid_gap" />
+
+                    <include
+                        android:id="@+id/cardSpo2"
+                        layout="@layout/item_data_card"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <!-- Vital row 2: Stress + Skin Temp -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/card_grid_gap"
+                    android:orientation="horizontal">
+
+                    <include
+                        android:id="@+id/cardStress"
+                        layout="@layout/item_data_card"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/card_grid_gap" />
+
+                    <include
+                        android:id="@+id/cardSkinTemp"
+                        layout="@layout/item_data_card"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <!-- Activity Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/section_title_margin_top"
+                    android:layout_marginBottom="@dimen/section_title_margin_bottom"
+                    android:text="@string/section_activity"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary"
+                    android:textAllCaps="true" />
+
+                <!-- Steps card (full width) -->
+                <include
+                    android:id="@+id/cardSteps"
+                    layout="@layout/item_steps_card" />
+
+                <!-- Activity row: Calories + Exercise -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/card_grid_gap"
+                    android:orientation="horizontal">
+
+                    <include
+                        android:id="@+id/cardCalories"
+                        layout="@layout/item_data_card"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/card_grid_gap" />
+
+                    <include
+                        android:id="@+id/cardExercise"
+                        layout="@layout/item_data_card"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <!-- Sleep Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/section_title_margin_top"
+                    android:layout_marginBottom="@dimen/section_title_margin_bottom"
+                    android:text="@string/section_sleep"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary"
+                    android:textAllCaps="true" />
+
+                <!-- Sleep card (full width) -->
+                <include
+                    android:id="@+id/cardSleep"
+                    layout="@layout/item_sleep_card" />
+
+                <!-- AI Energy Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/section_title_margin_top"
+                    android:layout_marginBottom="@dimen/section_title_margin_bottom"
+                    android:text="@string/section_energy"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary"
+                    android:textAllCaps="true" />
+
+                <!-- Energy score card (full width) -->
+                <include
+                    android:id="@+id/cardEnergy"
+                    layout="@layout/item_energy_card" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

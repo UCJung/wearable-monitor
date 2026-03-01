@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- STYLE_GUIDE_ANDROID.md 섹션 15 기준 -->
+<resources>
+    <!-- 레이아웃 -->
+    <dimen name="content_padding_horizontal">14dp</dimen>
+    <dimen name="content_padding_vertical">12dp</dimen>
+    <dimen name="card_grid_gap">8dp</dimen>
+    <dimen name="section_title_margin_top">10dp</dimen>
+    <dimen name="section_title_margin_bottom">8dp</dimen>
+
+    <!-- 카드 -->
+    <dimen name="card_corner_radius">14dp</dimen>
+    <dimen name="card_padding">12dp</dimen>
+    <dimen name="card_elevation">1dp</dimen>
+
+    <!-- 버튼 -->
+    <dimen name="btn_height_large">48dp</dimen>
+    <dimen name="btn_height_standard">44dp</dimen>
+    <dimen name="btn_height_small">36dp</dimen>
+    <dimen name="btn_corner_large">12dp</dimen>
+    <dimen name="btn_corner_standard">10dp</dimen>
+    <dimen name="btn_corner_small">8dp</dimen>
+
+    <!-- 입력 필드 -->
+    <dimen name="input_height">44dp</dimen>
+    <dimen name="input_corner_radius">10dp</dimen>
+    <dimen name="input_stroke_width">1.5dp</dimen>
+
+    <!-- 배지 -->
+    <dimen name="badge_height">22dp</dimen>
+    <dimen name="badge_padding_horizontal">8dp</dimen>
+    <dimen name="badge_corner_radius">20dp</dimen>
+
+    <!-- 바텀 내비 -->
+    <dimen name="bottom_nav_height">60dp</dimen>
+
+    <!-- Step Indicator -->
+    <dimen name="step_node_size">28dp</dimen>
+    <dimen name="step_line_height">2dp</dimen>
+
+    <!-- 게이지 바 -->
+    <dimen name="progress_bar_height">6dp</dimen>
+    <dimen name="sleep_bar_height">8dp</dimen>
+    <dimen name="energy_circle_size">64dp</dimen>
+    <dimen name="energy_circle_stroke">6dp</dimen>
+
+    <!-- 최소 터치 영역 -->
+    <dimen name="min_touch_target">44dp</dimen>
+</resources>

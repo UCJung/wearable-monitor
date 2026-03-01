@@ -66,3 +66,7 @@ logs/
 
 # ===== Docker =====
 docker-compose.override.yml
+
+# ===== Local Tools =====
+.claude/
+.serena/

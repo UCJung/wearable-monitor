@@ -96,7 +96,8 @@ cd backend
 ./gradlew bootRun --args='--spring.profiles.active=dev'
 ```
 - API 서버: http://localhost:8080
-- 초기 계정: admin / admin1234
+- 초기 계정 (의료진): admin / admin1234
+- 초기 계정 (환자): PT-0001 / PT-00011! (PT-0002, PT-0003 동일 패턴)
 
 ### 3. Front-end 실행
 ```bash
@@ -224,9 +225,16 @@ wearable-monitor/
 
 | Method | URL | 설명 |
 |---|---|---|
-| POST | `/api/v1/auth/login` | 로그인 (Access + Refresh 토큰 반환) |
+| POST | `/api/v1/auth/login` | 로그인 (Access + Refresh 토큰 반환, platform 기반 역할 검증) |
 | POST | `/api/v1/auth/refresh` | 토큰 갱신 |
 | POST | `/api/v1/auth/logout` | 로그아웃 (Redis 토큰 무효화) |
+
+> **역할 기반 로그인 분리 (TASK-12)**
+> - 웹(`platform: "WEB"`): STAFF(의료진)만 로그인 가능
+> - 앱(`platform: "ANDROID"`): PATIENT(환자)만 로그인 가능
+> - JWT에 `role` 클레임 포함 → Spring Security에서 `ROLE_STAFF` / `ROLE_PATIENT` 권한 부여
+> - 환자 등록 시 User 계정 자동 생성 (ID: 환자코드, 초기 비밀번호: 환자코드 + "1!")
+> - PATIENT는 본인 데이터만 조회 가능 (타인 접근 시 403)
 
 ### 환자 (`/api/v1/patients`)
 
@@ -282,10 +290,11 @@ wearable-monitor/
 
 ## DB 스키마
 
-5개 테이블 구성. `patient_biometric_history`는 TimescaleDB 하이퍼테이블로 시계열 최적화.
+6개 테이블 구성. `patient_biometric_history`는 TimescaleDB 하이퍼테이블로 시계열 최적화.
 
 | 테이블 | 설명 | 비고 |
 |---|---|---|
+| `users` | 사용자 계정 | role(STAFF/PATIENT), patient_id FK (PATIENT 전용) |
 | `patients` | 환자 정보 | patient_code 자동 채번 (PT-NNNN), 소프트 삭제 |
 | `devices` | 기기 정보 | serial_number UNIQUE, 소프트 삭제 |
 | `patient_device_assignments` | 환자-기기 할당 이력 | 환자당 ACTIVE 할당 1건만 허용 |
@@ -317,7 +326,7 @@ wearable-monitor/
 
 ## 개발 완료 현황
 
-전체 12개 TASK 완료.
+전체 13개 TASK 완료.
 
 | Phase | TASK | 내용 | 상태 |
 |---|---|---|---|
@@ -333,3 +342,4 @@ wearable-monitor/
 | 9 | TASK-09 | Android: 인증 + 설정 Wizard | 완료 |
 | 10 | TASK-10 | Android: 수집 Worker + 현황 대시보드 | 완료 |
 | 11 | TASK-11 | 통합 테스트 및 배포 | 완료 |
+| 12 | TASK-12 | 역할 기반 로그인 분리 (웹: 의료진 / 앱: 환자) | 완료 |
